@@ -88,7 +88,7 @@ func (t *FlightSmartContract) Init(stub shim.ChaincodeStubInterface) peer.Respon
 // method may create a new asset by specifying a new key-value pair.
 func (t *FlightSmartContract) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
 	// Extract the function and args from the transaction proposals
-	fmt.Println("FlightSmartContract is invoking...")
+	fmt.Println("FlightSmartContract is invoking###...")
 	fn, args := stub.GetFunctionAndParameters()
 
 	var result string
@@ -215,12 +215,12 @@ func makeFlightsData(flightArr []Flight) Flights {
 }
 
 func createFlightCompositKey(stub shim.ChaincodeStubInterface, flight Flight) (string, error) {
-	t, err := time.Parse("2006-01-02", flight.DeptDate)
+	tObj, err := time.Parse("02-01-2006", flight.DeptDate) // dd-MM-yyyy
 	var key string
 	if err != nil {
 		return key, errors.New("Invalid date " + flight.DeptDate)
 	}
-	year, month, day := t.Date()
+	year, month, day := tObj.Date()
 	key, err = stub.CreateCompositeKey(INDEX_NAME_FLT, []string{flight.OwnerCompany, strconv.Itoa(year), strconv.Itoa(int(month)), strconv.Itoa(day)})
 	return key, nil
 }
@@ -280,12 +280,12 @@ func (t *FlightSmartContract) queryFlight(stub shim.ChaincodeStubInterface, args
 }
 
 func (t *FlightSmartContract) queryAllFlights(stub shim.ChaincodeStubInterface, args []string) peer.Response {
-	if len(args) != 3 {
+	if len(args) != 2 {
 		return shim.Error("Incorrect number of arguments. Expecting 2")
 	}
 	ownerCompany := args[1]
 	flightDate := args[2]
-	tObj, err := time.Parse("2006-01-02", flightDate)
+	tObj, err := time.Parse("02-01-2006", flightDate) // dd-MM-yyyy
 	if err != nil {
 		return shim.Error("Invalid date " + flightDate)
 	}
