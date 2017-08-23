@@ -22,7 +22,7 @@ const (
 
 type FlightShrContract struct {
 	OwnerCompany  string `json:"ownerCompany"`
-	PercSeatAlloc uint8  `json:"percSeatAlloc"`
+	PercSeatAlloc int  `json:"percSeatAlloc"`
 }
 
 type Flights struct {
@@ -41,8 +41,8 @@ type Flight struct {
 	DeptTime     string      `json:"deptTime"`
 	ArrDate      string      `json:"arrDate"`
 	ArrTime      string      `json:"arrTime"`
-	NoOfSeats    uint8       `json:"noOfSeats"`
-	NoOfStops    uint8       `json:"noOfStops"`
+	NoOfSeats    int       `json:"noOfSeats"`
+	NoOfStops    int       `json:"noOfStops"`
 	LegDetails   []FlightLeg `json:"legDetails"`
 }
 
@@ -54,8 +54,8 @@ type FlightLeg struct {
 	ArrDate     string `json:"arrDate"`
 	ArrTime     string `json:"arrTime"`
 	TravelMode  string `json:"travelMode"`
-	LegNo       uint8  `json:"legNo"`
-	AvailSeats  uint8  `json:"availSeats"`
+	LegNo       int  `json:"legNo"`
+	AvailSeats  int  `json:"availSeats"`
 }
 
 // FlightSmartContract implements a simple chaincode to manage an asset
@@ -171,7 +171,7 @@ func createSharedFlights(stub shim.ChaincodeStubInterface, flight Flight) peer.R
 	fltShrContracts := []FlightShrContract{FlightShrContract{OwnerCompany: PEER2, PercSeatAlloc: 20}, FlightShrContract{OwnerCompany: PEER3, PercSeatAlloc: 30}, FlightShrContract{OwnerCompany: PEER4, PercSeatAlloc: 10}}
 	totalSeats := flight.NoOfSeats
 	availSeat := totalSeats
-	var noOfSeats uint8
+	var noOfSeats int
 
 	i := 0
 	fmt.Println("fltShrContracts= ", fltShrContracts)
@@ -184,8 +184,10 @@ func createSharedFlights(stub shim.ChaincodeStubInterface, flight Flight) peer.R
 
 	for i < len(fltShrContracts) {
 		fltShrContract := fltShrContracts[i]
+		fmt.Println("fltShrContract= ", fltShrContract)
 		if fltShrContract.PercSeatAlloc > 0 {
-			noOfSeats = totalSeats * (fltShrContract.PercSeatAlloc / 100)
+		fmt.Println("fltShrContract.PercSeatAlloc= ", fltShrContract.PercSeatAlloc)
+			noOfSeats = (totalSeats * fltShrContract.PercSeatAlloc) / 100
 			fmt.Println("noOfSeats= ", noOfSeats)
 			fmt.Println("availSeat= ", availSeat)
 			if availSeat >= noOfSeats {
@@ -225,7 +227,7 @@ func createFlightCompositKey(stub shim.ChaincodeStubInterface, flight Flight) (s
 	return key, nil
 }
 
-func prepareFlight(flight Flight, noOfSeats uint8, availSeat *uint8, ownerCompany string) Flight {
+func prepareFlight(flight Flight, noOfSeats int, availSeat *int, ownerCompany string) Flight {
 	fmt.Println("prepareFlight is running...")
 	newFlight := Flight{}
 	*(&newFlight) = *(&flight)
@@ -237,7 +239,7 @@ func prepareFlight(flight Flight, noOfSeats uint8, availSeat *uint8, ownerCompan
 	return newFlight
 }
 
-func copyLegDetails(flightLegs []FlightLeg, noOfSeats uint8) []FlightLeg {
+func copyLegDetails(flightLegs []FlightLeg, noOfSeats int) []FlightLeg {
 	fmt.Println("copyLegDetails is running...")
 	var newFlightLegs []FlightLeg
 	var flightLeg FlightLeg
