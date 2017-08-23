@@ -17,7 +17,7 @@ const (
 	PEER3          = "CVXG"
 	PEER4          = "BP"
 	CONTRACT_KEY   = "_Contract"
-	INDEX_NAME_FLT = "company~year~~month~day"
+	INDEX_NAME_FLT = "company~year~month~day"
 )
 
 type FlightShrContract struct {
@@ -94,14 +94,14 @@ func (t *FlightSmartContract) Invoke(stub shim.ChaincodeStubInterface) peer.Resp
 	var result string
 	var err error
 	if fn == "createFlight" {
-		createFlight(stub, args)
-	}else if fn == "createFlight" {
-		queryFlight(stub, args)
-	}else if fn == "createFlight" {
-		queryAllFlights(stub, args);
-	}eelse if fn == "set" {
+		return t.createFlight(stub, args)
+	}else if fn == "queryFlight" {
+		return t.queryFlight(stub, args)
+	}else if fn == "queryAllFlights" {
+		return t.queryAllFlights(stub, args);
+	}else if fn == "set" {
 		return set(stub, args)
-	} else { // assume 'get' even if fn is nil
+	}else { // assume 'get' even if fn is nil
 		return get(stub, args)
 	}
 	if err != nil {
