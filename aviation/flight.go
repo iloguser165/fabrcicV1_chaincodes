@@ -93,7 +93,13 @@ func (t *FlightSmartContract) Invoke(stub shim.ChaincodeStubInterface) peer.Resp
 
 	var result string
 	var err error
-	if fn == "set" {
+	if fn == "createFlight" {
+		createFlight(stub, args)
+	}else if fn == "createFlight" {
+		queryFlight(stub, args)
+	}else if fn == "createFlight" {
+		queryAllFlights(stub, args);
+	}eelse if fn == "set" {
 		return set(stub, args)
 	} else { // assume 'get' even if fn is nil
 		return get(stub, args)
