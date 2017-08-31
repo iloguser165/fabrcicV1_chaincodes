@@ -285,9 +285,9 @@ func (t *FlightSmartContract) queryAllFlights(stub shim.ChaincodeStubInterface, 
 	if len(args) != 2 {
 		return shim.Error("Incorrect number of arguments. Expecting 2")
 	}
-	ownerCompany := args[1]
+	ownerCompany := args[0]
 	fmt.Println("queryAllFlights... ownerCompany=", ownerCompany)
-	flightDate := args[2]
+	flightDate := args[1]
 	fmt.Println("queryAllFlights... flightDate=", flightDate)
 	tObj, err := time.Parse("02-01-2006", flightDate) // dd-MM-yyyy
 	if err != nil {
