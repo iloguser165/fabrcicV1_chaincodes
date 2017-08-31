@@ -286,11 +286,14 @@ func (t *FlightSmartContract) queryAllFlights(stub shim.ChaincodeStubInterface, 
 		return shim.Error("Incorrect number of arguments. Expecting 2")
 	}
 	ownerCompany := args[1]
+	fmt.Println("queryAllFlights... ownerCompany=", ownerCompany)
 	flightDate := args[2]
+	fmt.Println("queryAllFlights... flightDate=", flightDate)
 	tObj, err := time.Parse("02-01-2006", flightDate) // dd-MM-yyyy
 	if err != nil {
 		return shim.Error("Invalid date " + flightDate)
 	}
+	fmt.Println("queryAllFlights... tObj=", tObj)
 	year, month, day := tObj.Date()
 	fmt.Printf("%s%d", "...day=", day)
 	fltResultsIterator, err := stub.GetStateByPartialCompositeKey(INDEX_NAME_FLT, []string{ownerCompany, strconv.Itoa(year), strconv.Itoa(int(month))})
@@ -305,6 +308,7 @@ func (t *FlightSmartContract) queryAllFlights(stub shim.ChaincodeStubInterface, 
 		if err != nil {
 			return shim.Error(err.Error())
 		}
+		fmt.Println("queryAllFlights...i=", i, " responseRange=", responseRange)
 		//objectType, compositeKeyParts, err := stub.SplitCompositeKey(responseRange.Key)
 		flightsByteArray := responseRange.Value
 		flights := Flights{}
