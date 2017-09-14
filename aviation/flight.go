@@ -43,6 +43,8 @@ type Flight struct {
 	ArrTime      string      `json:"arrTime"`
 	NoOfSeats    int       `json:"noOfSeats"`
 	NoOfStops    int       `json:"noOfStops"`
+	TotFltDistance float64 `json:"totFltDistance"`
+	MaxPayload 	 float64   `json:"maxPayload"`
 	LegDetails   []FlightLeg `json:"legDetails"`
 }
 
@@ -56,6 +58,9 @@ type FlightLeg struct {
 	TravelMode  string `json:"travelMode"`
 	LegNo       int  `json:"legNo"`
 	AvailSeats  int  `json:"availSeats"`
+	PaxCapacity int  `json:"paxCapacity"`
+	TotDistance float64 `json:"totDistance"`
+	TotPayload 	float64 `json:"totPayload"`
 }
 
 // FlightSmartContract implements a simple chaincode to manage an asset
