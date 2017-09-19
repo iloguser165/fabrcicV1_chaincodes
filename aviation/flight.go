@@ -49,7 +49,7 @@ type Flight struct {
 	NoOfStops    int       `json:"noOfStops"`
 	TotFltDistance float64 `json:"totFltDistance"`
 	MaxPayload 	 float64   `json:"maxPayload"`
-	EffectiveDate float64   `json:"effectiveDate"`
+	EffectiveDate string   `json:"effectiveDate"`
 	LegDetails   []FlightLeg `json:"legDetails"`
 }
 
