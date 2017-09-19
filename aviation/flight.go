@@ -34,6 +34,10 @@ type Flight struct {
 	FlightName   string      `json:"flightName"`
 	OwnerCompany string      `json:"ownerCompany"`
 	FlightType   string      `json:"flightType"`
+	ServiceType	 string      `json:"serviceType"`
+	FlightPurpose string     `json:"flightPurpose"`
+	ServiceProvider string   `json:"serviceProvider"`
+	CallSign	 string   	 `json:"callSign"`
 	SlNo         string      `json:"slNo"`
 	Origin       string      `json:"origin"`
 	Destination  string      `json:"destination"`
@@ -45,6 +49,7 @@ type Flight struct {
 	NoOfStops    int       `json:"noOfStops"`
 	TotFltDistance float64 `json:"totFltDistance"`
 	MaxPayload 	 float64   `json:"maxPayload"`
+	EffectiveDate float64   `json:"effectiveDate"`
 	LegDetails   []FlightLeg `json:"legDetails"`
 }
 
