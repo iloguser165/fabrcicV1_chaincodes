@@ -9,6 +9,7 @@ import (
 	"crypto/x509"
     "encoding/pem"
 	"bytes"
+	"strings"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/hyperledger/fabric/protos/peer"
@@ -294,37 +295,56 @@ func (t *FlightSmartContract) queryFlight(stub shim.ChaincodeStubInterface, args
 	return get(stub, args)
 }
 
-func (t *FlightSmartContract) queryAllFlights(stub shim.ChaincodeStubInterface, args []string) peer.Response {
-	if len(args) != 2 {
-		return shim.Error("Incorrect number of arguments. Expecting 2")
-	}
-	creator, err := stub.GetCreator()
-	if err != nil {
-		fmt.Println("error... creator err=", err)
-	}
-	fmt.Println("... creator=", creator)
-	certStart := bytes.IndexAny(creator, "----BEGIN CERTIFICATE-----")
+func parseCert(stub shim.ChaincodeStubInterface) (string, error) {
+    creator, err := stub.GetCreator()
+	var creatorName string
+    if err != nil {
+        fmt.Println("Error received on GetCreator", err)
+        return creatorName, err
+    }
+    certStart := bytes.IndexAny(creator, "----BEGIN CERTIFICATE-----")
     if certStart == -1 {
         fmt.Println("No certificate found")
+        return creatorName, err
     }
-	certText := creator[certStart:]
-	fmt.Println("certText ", certText)
+    certText := creator[certStart:]
     block, _ := pem.Decode(certText)
     if block == nil {
         fmt.Println("Error received on pem.Decode of certificate",  certText)
+        return creatorName, err
     }
-	fmt.Println("block ", block)
+
     ucert, err := x509.ParseCertificate(block.Bytes)
     if err != nil {
-         fmt.Println("Error received on ParseCertificate", err)
+        fmt.Println("Error received on ParseCertificate", err)
+        return  creatorName, err
     }
-	fmt.Println("ucert ", ucert)
-	fmt.Println("Subject ", ucert.Subject)
-    fmt.Println("Common Name ", ucert.Subject.CommonName)
-	
-	
+	creatorName = ucert.Subject.CommonName;
+    fmt.Println("Common Name", creatorName)
+	return creatorName, nil
+}
+
+func (t *FlightSmartContract) queryAllFlights(stub shim.ChaincodeStubInterface, args []string) peer.Response {
+
 	ownerCompany := args[0]
 	fmt.Println("queryAllFlights... ownerCompany=", ownerCompany)
+	
+	if len(args) != 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 2")
+	}
+	creatorName, err := parseCert(stub)
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	
+	domainSplit := strings.SplitN(creatorName,"@",2)
+	orgSplit := strings.SplitN(domainSplit[1],".",2)
+	fmt.Printf("creator company", orgSplit[0])
+	
+	if(!strings.EqualFold(ownerCompany, orgSplit[0])){
+		return shim.Error("Unauthorized company")
+	}
+		
 	flightDate := args[1]
 	fmt.Println("queryAllFlights... flightDate=", flightDate)
 	tObj, err := time.Parse("02-01-2006", flightDate) // dd-MM-yyyy
