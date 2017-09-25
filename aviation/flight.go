@@ -339,7 +339,7 @@ func (t *FlightSmartContract) queryAllFlights(stub shim.ChaincodeStubInterface, 
 	
 	domainSplit := strings.SplitN(creatorName,"@",2)
 	orgSplit := strings.SplitN(domainSplit[1],".",2)
-	fmt.Printf("creator company", orgSplit[0])
+	fmt.Println("creator company", orgSplit[0])
 	
 	if(!strings.EqualFold(ownerCompany, orgSplit[0])){
 		return shim.Error("Unauthorized company")
