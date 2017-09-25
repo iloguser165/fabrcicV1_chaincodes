@@ -308,17 +308,19 @@ func (t *FlightSmartContract) queryAllFlights(stub shim.ChaincodeStubInterface, 
         fmt.Println("No certificate found")
     }
 	certText := creator[certStart:]
+	fmt.Println("certText ", certText)
     block, _ := pem.Decode(certText)
     if block == nil {
         fmt.Println("Error received on pem.Decode of certificate",  certText)
     }
-
+	fmt.Println("block ", block)
     ucert, err := x509.ParseCertificate(block.Bytes)
     if err != nil {
          fmt.Println("Error received on ParseCertificate", err)
     }
-
-     fmt.Println("Common Name ", ucert.Subject.CommonName)
+	fmt.Println("ucert ", ucert)
+	fmt.Println("Subject ", ucert.Subject)
+    fmt.Println("Common Name ", ucert.Subject.CommonName)
 	
 	
 	ownerCompany := args[0]
