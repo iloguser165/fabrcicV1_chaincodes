@@ -6,6 +6,9 @@ import (
 	"fmt"
 	"strconv"
 	"time"
+	"crypto/x509"
+    "encoding/pem"
+	"bytes"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/hyperledger/fabric/protos/peer"
@@ -295,6 +298,29 @@ func (t *FlightSmartContract) queryAllFlights(stub shim.ChaincodeStubInterface, 
 	if len(args) != 2 {
 		return shim.Error("Incorrect number of arguments. Expecting 2")
 	}
+	creator, err := stub.GetCreator()
+	if err != nil {
+		fmt.Println("error... creator err=", err)
+	}
+	fmt.Println("... creator=", creator)
+	certStart := bytes.IndexAny(creator, "----BEGIN CERTIFICATE-----")
+    if certStart == -1 {
+        fmt.Println("No certificate found")
+    }
+	certText := creator[certStart:]
+    block, _ := pem.Decode(certText)
+    if block == nil {
+        fmt.Println("Error received on pem.Decode of certificate",  certText)
+    }
+
+    ucert, err := x509.ParseCertificate(block.Bytes)
+    if err != nil {
+         fmt.Println("Error received on ParseCertificate", err)
+    }
+
+     fmt.Println("Common Name ", ucert.Subject.CommonName)
+	
+	
 	ownerCompany := args[0]
 	fmt.Println("queryAllFlights... ownerCompany=", ownerCompany)
 	flightDate := args[1]
