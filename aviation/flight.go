@@ -182,7 +182,7 @@ func (t *FlightSmartContract) createFlight(stub shim.ChaincodeStubInterface, arg
 
 func createSharedFlights(stub shim.ChaincodeStubInterface, flight Flight) peer.Response {
 	fmt.Println("createSharedFlights is running ")
-	fltShrContracts := []FlightShrContract{FlightShrContract{OwnerCompany: PEER2, PercSeatAlloc: 20}, FlightShrContract{OwnerCompany: PEER3, PercSeatAlloc: 30}, FlightShrContract{OwnerCompany: PEER4, PercSeatAlloc: 10}}
+	fltShrContracts := []FlightShrContract{FlightShrContract{OwnerCompany: PEER2, PercSeatAlloc: 40}, FlightShrContract{OwnerCompany: PEER3, PercSeatAlloc: 30}, FlightShrContract{OwnerCompany: PEER4, PercSeatAlloc: 20}}
 	totalSeats := flight.NoOfSeats
 	availSeat := totalSeats
 	var noOfSeats int
