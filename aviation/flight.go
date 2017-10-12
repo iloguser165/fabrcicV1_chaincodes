@@ -9,7 +9,7 @@ import (
 	"crypto/x509"
     "encoding/pem"
 	"bytes"
-	//"strings"
+	"strings"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/hyperledger/fabric/protos/peer"
@@ -332,7 +332,7 @@ func (t *FlightSmartContract) queryAllFlights(stub shim.ChaincodeStubInterface, 
 	if len(args) != 2 {
 		return shim.Error("Incorrect number of arguments. Expecting 2")
 	}
-	/*creatorName, err := parseCert(stub)
+	creatorName, err := parseCert(stub)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
@@ -343,7 +343,7 @@ func (t *FlightSmartContract) queryAllFlights(stub shim.ChaincodeStubInterface, 
 	
 	if(!strings.EqualFold(ownerCompany, orgSplit[0])){
 		return shim.Error("Unauthorized company")
-	}*/
+	}
 		
 	flightDate := args[1]
 	fmt.Println("queryAllFlights... flightDate=", flightDate)
