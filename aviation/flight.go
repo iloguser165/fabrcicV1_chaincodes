@@ -127,7 +127,7 @@ func (t *FlightSmartContract) Invoke(stub shim.ChaincodeStubInterface) peer.Resp
 }
 
 // Set stores the asset (both key and value) on the ledger. If the key exists,
-// it will override the value with the new one
+// it will override the value with the new one__
 func set(stub shim.ChaincodeStubInterface, args []string) peer.Response {
 	if len(args) != 2 {
 		return shim.Error("Incorrect arguments. Expecting a key and a value")
